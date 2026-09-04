@@ -48,7 +48,7 @@ export default function Policies() {
       <div className="space-y-6">
         <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex items-center justify-between">
            <div>
-             <h3 className="font-bold text-lg flex items-center gap-2"><ShieldAlert size={18} className="text-red-500"/> High Value Threshold</h3>
+             <h3 className="font-bold text-lg text-slate-900 flex items-center gap-2"><ShieldAlert size={18} className="text-red-500"/> High Value Threshold</h3>
              <p className="text-sm text-slate-500">Block or escalate transactions above this amount automatically.</p>
            </div>
            <div className="flex items-center gap-4">
@@ -69,7 +69,7 @@ export default function Policies() {
 
         <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex items-center justify-between">
            <div>
-             <h3 className="font-bold text-lg flex items-center gap-2"><ShieldAlert size={18} className="text-amber-500"/> Max Retry Limits</h3>
+             <h3 className="font-bold text-lg text-slate-900 flex items-center gap-2"><ShieldAlert size={18} className="text-amber-500"/> Max Retry Limits</h3>
              <p className="text-sm text-slate-500">Prevent the AI from spamming users with infinite retry attempts.</p>
            </div>
            <div className="flex items-center gap-4">
