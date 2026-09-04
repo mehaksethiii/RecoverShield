@@ -128,8 +128,8 @@ export default function Dashboard() {
               Gemini 3.1 + Groq Active
             </span>
           </div>
-          <h1 className="text-3xl font-extrabold text-slate-900 mt-2">RazorShield Revenue Operations</h1>
-          <p className="text-slate-500 text-sm">Autonomous payment drops diagnosis, bounded retries & policy-gated recovery.</p>
+          <h1 className="text-3xl font-extrabold text-white mt-2">RazorShield Revenue Operations</h1>
+          <p className="text-slate-400 text-sm">Autonomous payment drops diagnosis, bounded retries & policy-gated recovery.</p>
         </div>
         <button onClick={simulateFailure} className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium py-2.5 px-5 rounded-xl shadow-md shadow-blue-500/20 flex items-center gap-2 transition-all transform active:scale-95">
           <PlayCircle size={18} />
