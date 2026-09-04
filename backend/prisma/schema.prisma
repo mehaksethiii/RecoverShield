@@ -1,0 +1,309 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Merchant {
+  id        String   @id @default(uuid())
+  name      String
+  apiKey    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  risks          RevenueRisk[]
+  customers      Customer[]
+  orders         Order[]
+  subscriptions  Subscription[]
+  invoices       Invoice[]
+  policyRules    PolicyRule[]
+  simulationRuns SimulationRun[]
+}
+
+model Customer {
+  id         String   @id @default(uuid())
+  merchantId String
+  name       String
+  email      String
+  phone      String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  
+  merchant       Merchant @relation(fields: [merchantId], references: [id])
+  risks          RevenueRisk[]
+  orders         Order[]
+  subscriptions  Subscription[]
+  invoices       Invoice[]
+  agentMemories  AgentMemory[]
+  
+  @@index([merchantId])
+  @@index([email])
+}
+
+model Order {
+  id         String   @id @default(uuid())
+  merchantId String
+  customerId String
+  amount     Int
+  currency   String   @default("INR")
+  status     String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  
+  merchant   Merchant @relation(fields: [merchantId], references: [id])
+  customer   Customer @relation(fields: [customerId], references: [id])
+  payments   Payment[]
+  
+  @@index([merchantId])
+  @@index([customerId])
+}
+
+model Subscription {
+  id         String   @id @default(uuid())
+  merchantId String
+  customerId String
+  planId     String
+  status     String
+  amount     Int
+  currency   String   @default("INR")
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  merchant   Merchant @relation(fields: [merchantId], references: [id])
+  customer   Customer @relation(fields: [customerId], references: [id])
+  
+  @@index([merchantId])
+  @@index([customerId])
+}
+
+model Invoice {
+  id         String   @id @default(uuid())
+  merchantId String
+  customerId String
+  amount     Int
+  currency   String   @default("INR")
+  status     String
+  dueDate    DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  merchant   Merchant @relation(fields: [merchantId], references: [id])
+  customer   Customer @relation(fields: [customerId], references: [id])
+  
+  @@index([merchantId])
+  @@index([customerId])
+}
+
+model Payment {
+  id                String   @id @default(uuid())
+  orderId           String
+  razorpayPaymentId String?
+  amount            Int
+  currency          String   @default("INR")
+  status            String
+  method            String?
+  failureReason     String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  order             Order    @relation(fields: [orderId], references: [id])
+  risks             RevenueRisk[]
+  
+  @@index([orderId])
+  @@index([razorpayPaymentId])
+}
+
+model RevenueRisk {
+  id                        String   @id @default(uuid())
+  merchantId                String
+  customerId                String
+  paymentId                 String?
+  sourceType                String   // PAYMENT_FAILURE, CHECKOUT_ABANDONMENT, SUBSCRIPTION_FAILURE, OVERDUE_RECEIVABLE
+  amount                    Int
+  currency                  String   @default("INR")
+  riskReason                String?
+  failureReason             String?
+  riskScore                 Float?
+  recoveryProbability       Float?
+  expectedRecoverableAmount Int?
+  status                    String   // PENDING, RECOVERED, FAILED, ESCALATED, RESOLVED
+  recommendedAction         String?
+  actualOutcome             String?
+  recoveredAmount           Int?
+  detectedAt                DateTime @default(now())
+  updatedAt                 DateTime @updatedAt
+
+  merchant                  Merchant @relation(fields: [merchantId], references: [id])
+  customer                  Customer @relation(fields: [customerId], references: [id])
+  payment                   Payment? @relation(fields: [paymentId], references: [id])
+  decisions                 RecoveryDecision[]
+  policyDecisions           PolicyDecision[]
+  actions                   RecoveryAction[]
+  humanReviews              HumanReview[]
+  simulationEvents          SimulationEvent[]
+  
+  @@index([merchantId])
+  @@index([customerId])
+  @@index([paymentId])
+  @@index([status])
+}
+
+model RecoveryDecision {
+  id                String   @id @default(uuid())
+  riskId            String
+  recommendedAction String
+  confidence        Float
+  reason            String
+  expectedAmount    Int?
+  riskLevel         String
+  createdAt         DateTime @default(now())
+  
+  risk              RevenueRisk @relation(fields: [riskId], references: [id])
+  
+  @@index([riskId])
+}
+
+model PolicyDecision {
+  id              String   @id @default(uuid())
+  riskId          String
+  action          String
+  status          String   // ALLOW, BLOCK, REQUIRE_HUMAN
+  reason          String
+  createdAt       DateTime @default(now())
+  
+  risk            RevenueRisk @relation(fields: [riskId], references: [id])
+  
+  @@index([riskId])
+}
+
+model RecoveryAction {
+  id              String   @id @default(uuid())
+  riskId          String
+  actionType      String
+  status          String   // PENDING, SUCCESS, FAILED
+  apiResponse     String?
+  createdAt       DateTime @default(now())
+  
+  risk            RevenueRisk @relation(fields: [riskId], references: [id])
+  
+  @@index([riskId])
+}
+
+model AuditLog {
+  id              String   @id @default(uuid())
+  eventType       String
+  riskId          String?
+  actor           String   // AI, HUMAN, SYSTEM
+  details         String
+  createdAt       DateTime @default(now())
+  
+  @@index([riskId])
+  @@index([eventType])
+}
+
+model PolicyRule {
+  id              String   @id @default(uuid())
+  merchantId      String
+  ruleType        String   // MAX_RETRY_ATTEMPTS, MAX_AUTO_RECOVERY_AMOUNT, HIGH_VALUE_THRESHOLD, etc.
+  conditionValue  String   // e.g. "2", "10000", "0.60"
+  action          String   // BLOCK, REQUIRE_HUMAN
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  merchant        Merchant @relation(fields: [merchantId], references: [id])
+  
+  @@index([merchantId])
+}
+
+model HumanReview {
+  id              String   @id @default(uuid())
+  riskId          String
+  reason          String   // High value, low confidence, etc.
+  status          String   // PENDING, APPROVED, REJECTED, RESOLVED
+  reviewerId      String?
+  decision        String?
+  notes           String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  risk            RevenueRisk @relation(fields: [riskId], references: [id])
+  
+  @@index([riskId])
+  @@index([status])
+}
+
+model AgentMemory {
+  id              String   @id @default(uuid())
+  customerId      String
+  memoryKey       String   // e.g. "LAST_SUCCESSFUL_METHOD"
+  memoryValue     String
+  confidence      Float?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  customer        Customer @relation(fields: [customerId], references: [id])
+  
+  @@index([customerId])
+}
+
+model SimulationRun {
+  id              String   @id @default(uuid())
+  merchantId      String
+  name            String
+  totalEvents     Int
+  status          String   // RUNNING, COMPLETED, FAILED
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  merchant        Merchant @relation(fields: [merchantId], references: [id])
+  events          SimulationEvent[]
+  evaluation      EvaluationRun?
+  
+  @@index([merchantId])
+}
+
+model SimulationEvent {
+  id              String   @id @default(uuid())
+  simulationId    String
+  riskId          String?
+  eventType       String
+  payload         String
+  createdAt       DateTime @default(now())
+
+  simulation      SimulationRun @relation(fields: [simulationId], references: [id])
+  risk            RevenueRisk? @relation(fields: [riskId], references: [id])
+  
+  @@index([simulationId])
+  @@index([riskId])
+}
+
+model EvaluationRun {
+  id                    String   @id @default(uuid())
+  simulationId          String   @unique
+  baselineRecovery      Int
+  aiRecovery            Int
+  incrementalRevenue    Int
+  recoveryRate          Float
+  interventionRate      Float
+  escalationRate        Float
+  blockedActions        Int
+  successfulActions     Int
+  failedActions         Int
+  createdAt             DateTime @default(now())
+
+  simulation            SimulationRun @relation(fields: [simulationId], references: [id])
+}
+
+model EvaluationMetric {
+  id              String   @id @default(uuid())
+  evaluationId    String
+  metricName      String
+  metricValue     Float
+  createdAt       DateTime @default(now())
+  
+  @@index([evaluationId])
+}
