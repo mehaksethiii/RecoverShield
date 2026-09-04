@@ -1,5 +1,5 @@
 import { Link, Outlet, useLocation } from 'react-router-dom';
-import { ShieldCheck, Activity, BarChart3, Users, MessageSquare, List } from 'lucide-react';
+import { ShieldCheck, Activity, BarChart3, MessageSquare, List } from 'lucide-react';
 
 export default function Layout() {
   const location = useLocation();

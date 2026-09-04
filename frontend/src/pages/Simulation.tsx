@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Play, BarChart, Server } from 'lucide-react';
+import { Play } from 'lucide-react';
 
 export default function Simulation() {
   const [sims, setSims] = useState<any[]>([]);

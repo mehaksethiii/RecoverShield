@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Shield, Brain, User, Settings, CheckCircle2, XCircle } from 'lucide-react';
+import { Brain, User, Settings, CheckCircle2, XCircle } from 'lucide-react';
 
 export default function AuditTrail() {
   const [logs, setLogs] = useState<any[]>([]);

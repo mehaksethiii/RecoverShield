@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { AlertCircle, ShieldCheck, IndianRupee, PlayCircle } from 'lucide-react';
+import { AlertCircle, ShieldCheck, IndianRupee, PlayCircle, Zap, Cpu, Sparkles } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import Shield3D from '../components/Shield3D';
 
 export default function Dashboard() {
   const [data, setData] = useState<any>(null);
@@ -55,16 +56,55 @@ export default function Dashboard() {
 
   return (
     <div>
-      <header className="mb-8 flex justify-between items-center">
+      <header className="mb-6 flex flex-wrap justify-between items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Revenue Recovery</h1>
-          <p className="text-slate-500 mt-1">AI-powered autonomous revenue protection.</p>
+          <div className="flex items-center gap-2">
+            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700 border border-emerald-300 flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              Razorpay Test Mode Connected
+            </span>
+            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-700 border border-blue-300 flex items-center gap-1">
+              <Sparkles size={12} />
+              Gemini 3.1 + Groq Active
+            </span>
+          </div>
+          <h1 className="text-3xl font-extrabold text-slate-900 mt-2">RazorShield Revenue Operations</h1>
+          <p className="text-slate-500 text-sm">Autonomous payment drops diagnosis, bounded retries & policy-gated recovery.</p>
         </div>
-        <button onClick={simulateFailure} className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg flex items-center gap-2">
+        <button onClick={simulateFailure} className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium py-2.5 px-5 rounded-xl shadow-md shadow-blue-500/20 flex items-center gap-2 transition-all transform active:scale-95">
           <PlayCircle size={18} />
-          Demo: Trigger Failure
+          Simulate Payment Failure
         </button>
       </header>
+
+      {/* 3D Holographic Defense Hub */}
+      <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 rounded-2xl p-6 mb-8 text-white shadow-xl border border-slate-700/50 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center overflow-hidden relative">
+        <div className="lg:col-span-7 z-10">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-400/30 text-blue-300 text-xs font-mono mb-3">
+            <Cpu size={14} className="text-blue-400" />
+            3D AUTONOMOUS RECOVERY AGENT
+          </div>
+          <h2 className="text-2xl font-bold tracking-tight mb-2 text-white">
+            Real-Time Telemetry & Guardrail Shield
+          </h2>
+          <p className="text-slate-300 text-sm leading-relaxed mb-5 max-w-xl">
+            RazorShield continuously monitors incoming payment drops. The interactive 3D core below reacts dynamically to webhook anomalies, routing failed transactions through multi-model AI reasoning before executing bounded Razorpay recovery links.
+          </p>
+          <div className="flex flex-wrap gap-4 text-xs font-medium">
+            <div className="flex items-center gap-2 bg-slate-800/80 px-3 py-2 rounded-lg border border-slate-700">
+              <Zap size={14} className="text-amber-400" />
+              <span>Multi-Model AI Redundancy: <strong>Gemini + Groq</strong></span>
+            </div>
+            <div className="flex items-center gap-2 bg-slate-800/80 px-3 py-2 rounded-lg border border-slate-700">
+              <ShieldCheck size={14} className="text-emerald-400" />
+              <span>Policy Gates: <strong>100% Enforced</strong></span>
+            </div>
+          </div>
+        </div>
+        <div className="lg:col-span-5 h-64 flex items-center justify-center relative">
+          <Shield3D hasActiveRisks={data.activeRisks > 0} />
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex items-center gap-4">
