@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { AlertCircle, ShieldCheck, IndianRupee, PlayCircle, Zap, Cpu, Sparkles } from 'lucide-react';
+import { AlertCircle, ShieldCheck, IndianRupee, PlayCircle, Sparkles } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell, Legend } from 'recharts';
 import RecoverShield3DCore from '../components/RecoverShield3DCore';
 
@@ -268,7 +268,7 @@ export default function Dashboard() {
                   paddingAngle={5}
                   dataKey="value"
                 >
-                  {mockStrategyData.map((entry, index) => (
+                  {mockStrategyData.map((_entry, index) => (
                     <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
                   ))}
                 </Pie>
