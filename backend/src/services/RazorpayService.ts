@@ -44,7 +44,7 @@ export class RazorpayService {
         },
         reminder_enable: true,
         notes: {
-          reason: 'RecoverAI Recovery Link'
+          reason: 'RazorShield Recovery Link'
         }
       });
     } catch (error) {
