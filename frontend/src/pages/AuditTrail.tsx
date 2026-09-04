@@ -30,8 +30,8 @@ export default function AuditTrail() {
   return (
     <div>
       <header className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-900">Audit Trail</h1>
-        <p className="text-slate-500 mt-1">Immutable record of every AI decision, policy check, and execution.</p>
+        <h1 className="text-3xl font-bold text-white tracking-tight">Audit Trail</h1>
+        <p className="text-slate-400 mt-1">Immutable record of every AI decision, policy check, and execution.</p>
       </header>
 
       <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">

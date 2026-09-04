@@ -34,8 +34,8 @@ export default function Policies() {
     <div>
       <header className="mb-8 flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Policy Guardrails</h1>
-          <p className="text-slate-500 mt-1">Configure deterministic rules that override AI decisions.</p>
+          <h1 className="text-3xl font-bold text-white tracking-tight">Policy Guardrails</h1>
+          <p className="text-slate-400 mt-1">Configure deterministic rules that override AI decisions.</p>
         </div>
         {savedMessage && (
           <div className="flex items-center gap-2 bg-emerald-100 text-emerald-800 px-4 py-2 rounded-lg text-sm font-medium animate-fade-in">

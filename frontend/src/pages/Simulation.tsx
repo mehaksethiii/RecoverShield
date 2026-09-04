@@ -2,13 +2,15 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Play } from 'lucide-react';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
 export default function Simulation() {
   const [sims, setSims] = useState<any[]>([]);
   const [running, setRunning] = useState(false);
 
   const fetchSims = async () => {
     try {
-      const response = await axios.get('http://localhost:3001/api/simulations');
+      const response = await axios.get(`${API_URL}/api/simulations`);
       setSims(response.data);
     } catch (e) {
       console.error(e);
@@ -22,7 +24,7 @@ export default function Simulation() {
   const runSim = async (count: number) => {
     setRunning(true);
     try {
-      await axios.post('http://localhost:3001/api/simulations', { count });
+      await axios.post(`${API_URL}/api/simulations`, { count });
       await fetchSims();
     } catch (e) {
       console.error(e);
@@ -33,8 +35,8 @@ export default function Simulation() {
   return (
     <div>
       <header className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-900">Synthetic Batch Simulator</h1>
-        <p className="text-slate-500 mt-1">Generate realistic revenue-loss scenarios and evaluate Agent performance.</p>
+        <h1 className="text-3xl font-bold text-white tracking-tight">Synthetic Batch Simulator</h1>
+        <p className="text-slate-400 mt-1">Generate realistic revenue-loss scenarios and evaluate Agent performance.</p>
       </header>
 
       <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 mb-8">
