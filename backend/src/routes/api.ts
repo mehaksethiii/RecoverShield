@@ -85,7 +85,7 @@ router.post('/copilot', async (req, res) => {
                 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
                 const response = await ai.models.generateContent({
                     model: 'gemini-3.1-pro-preview',
-                    contents: `You are the RecoverAI Merchant Copilot. Answer the merchant's question based on this data: ${context}\n\nQuestion: ${query}`
+                    contents: `You are the RazorShield Merchant Copilot. Answer the merchant's question based on this data: ${context}\n\nQuestion: ${query}`
                 });
                 if (response.text) {
                     return res.json({ response: response.text });
@@ -109,7 +109,7 @@ router.post('/copilot', async (req, res) => {
                         messages: [
                             {
                                 role: 'system',
-                                content: `You are the RecoverAI Merchant Copilot. Answer the merchant's questions concisely using this merchant data:\n${context}`
+                                content: `You are the RazorShield Merchant Copilot. Answer the merchant's questions concisely using this merchant data:\n${context}`
                             },
                             { role: 'user', content: query }
                         ],
@@ -133,7 +133,7 @@ router.post('/copilot', async (req, res) => {
         const totalRisk = risks.reduce((sum, r) => sum + r.amount, 0);
         const resolved = risks.filter(r => r.status === 'RECOVERED').length;
         res.json({
-            response: `Based on your recent RecoverAI telemetry, there are ${risks.length} recent risk events totaling ₹${(totalRisk / 100).toLocaleString()}, with ${resolved} successfully recovered or intervened by guardrails. Both Gemini and Groq fallbacks are safely managed.`
+            response: `Based on your recent RazorShield telemetry, there are ${risks.length} recent risk events totaling ₹${(totalRisk / 100).toLocaleString()}, with ${resolved} successfully recovered or intervened by guardrails. Both Gemini and Groq fallbacks are safely managed.`
         });
     } catch(e: any) {
         console.error("Copilot Error:", e);

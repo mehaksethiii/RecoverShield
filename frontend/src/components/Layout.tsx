@@ -18,7 +18,7 @@ export default function Layout() {
       <div className="w-64 bg-slate-900 text-white p-6 flex flex-col h-screen sticky top-0">
         <div className="flex items-center gap-2 mb-10 text-xl font-bold">
           <ShieldCheck className="text-blue-400" />
-          RecoverAI
+          RazorShield
         </div>
         <nav className="flex flex-col gap-4 text-sm text-slate-300">
           {navItems.map(item => (

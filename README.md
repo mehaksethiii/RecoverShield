@@ -1,4 +1,4 @@
-# RecoverAI — Autonomous AI Revenue Recovery Agent for Merchants 🛡️💰
+# RazorShield — Autonomous AI Revenue Recovery Agent for Merchants 🛡️💰
 
 > Built for the **Razorpay AI Buildathon** under the **"AI Revenue Recovery"** Track.
 
@@ -8,11 +8,11 @@
 Merchants lose up to **15-30% of addressable digital revenue** from payment drop-offs, transient network timeouts, issuer declines, abandoned checkouts, and missed renewals. 
 Existing recovery tools rely on blind, blunt retry loops that spam customers, damage issuer risk scores, and trigger account bans without auditability.
 
-## 🚀 The Solution: RecoverAI
-**RecoverAI** is an autonomous, explainable revenue recovery agent.
+## 🚀 The Solution: RazorShield
+**RazorShield** is an autonomous, explainable revenue recovery agent.
 It monitors revenue at risk, analyzes failure telemetry with multi-model AI (Google Gemini + Groq LLaMA-3.3 fallback), subjects every financial intervention to deterministic policy guardrails, and executes bounded recovery actions (such as intelligent retries or custom Razorpay Payment Links) with full auditability.
 
-> *"RecoverAI doesn't just identify where revenue is being lost. It autonomously recovers what it safely can, knows when to stop, escalates what it shouldn't touch, and proves exactly how much revenue it saved."*
+> *"RazorShield doesn't just identify where revenue is being lost. It autonomously recovers what it safely can, knows when to stop, escalates what it shouldn't touch, and proves exactly how much revenue it saved."*
 
 ---
 

@@ -5,7 +5,7 @@ import { Send, Bot, User } from 'lucide-react';
 export default function Copilot() {
   const [query, setQuery] = useState('');
   const [chat, setChat] = useState<{sender: 'user' | 'bot', text: string}[]>([
-    { sender: 'bot', text: 'Hello! I am your RecoverAI Copilot. Ask me about your revenue risks, recovery performance, or recent failures.' }
+    { sender: 'bot', text: 'Hello! I am your RazorShield Copilot. Ask me about your revenue risks, recovery performance, or recent failures.' }
   ]);
   const [loading, setLoading] = useState(false);
 

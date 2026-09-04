@@ -147,7 +147,7 @@ export class AgentService {
            const link = await razorpayService.createPaymentLink(
              risk.amount,
              risk.currency,
-             'RecoverAI Payment Retry',
+             'RazorShield Payment Recovery',
              { name: customer.name, email: customer.email, contact: customer.phone || '' }
            );
            apiResponse = JSON.stringify({ linkId: link.id, url: link.short_url });

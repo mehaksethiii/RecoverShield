@@ -11,7 +11,7 @@ export class AIService {
   }
 
   async analyzeFailure(paymentData: any, memoryContext: string = "No previous history.") {
-    const prompt = `You are the RecoverAI Revenue Recovery Agent.
+    const prompt = `You are RazorShield, an autonomous AI Revenue Recovery Agent for Razorpay merchants.
 Analyze this payment failure and recommend a recovery action.
 You must choose one of: RETRY_PAYMENT, GENERATE_PAYMENT_LINK, ESCALATE_HUMAN, DO_NOTHING.
 
