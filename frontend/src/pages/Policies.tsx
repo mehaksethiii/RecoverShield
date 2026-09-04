@@ -52,8 +52,8 @@ export default function Policies() {
              <p className="text-sm text-slate-500">Block or escalate transactions above this amount automatically.</p>
            </div>
            <div className="flex items-center gap-4">
-             <input type="number" defaultValue="100000" id="highVal" className="border px-3 py-1 rounded" />
-             <select id="highAction" className="border px-3 py-1 rounded" defaultValue="REQUIRE_HUMAN">
+             <input type="number" defaultValue="100000" id="highVal" className="border px-3 py-1 rounded text-slate-900 bg-white" />
+             <select id="highAction" className="border px-3 py-1 rounded text-slate-900 bg-white" defaultValue="REQUIRE_HUMAN">
                 <option value="REQUIRE_HUMAN">Require Human Review</option>
                 <option value="BLOCK">Block Completely</option>
              </select>
@@ -73,8 +73,8 @@ export default function Policies() {
              <p className="text-sm text-slate-500">Prevent the AI from spamming users with infinite retry attempts.</p>
            </div>
            <div className="flex items-center gap-4">
-             <input type="number" defaultValue="2" id="retryVal" className="border px-3 py-1 rounded w-20" />
-             <select id="retryAction" className="border px-3 py-1 rounded" defaultValue="BLOCK">
+             <input type="number" defaultValue="2" id="retryVal" className="border px-3 py-1 rounded w-20 text-slate-900 bg-white" />
+             <select id="retryAction" className="border px-3 py-1 rounded text-slate-900 bg-white" defaultValue="BLOCK">
                 <option value="BLOCK">Block AI Actions</option>
              </select>
              <button onClick={() => {
