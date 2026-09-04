@@ -54,7 +54,7 @@ Return ONLY valid JSON with keys:
     try {
       if (process.env.GEMINI_API_KEY && !process.env.GEMINI_API_KEY.includes('placeholder')) {
         const response = await this.ai.models.generateContent({
-          model: 'gemini-3.1-pro-preview',
+          model: 'gemini-2.0-flash',
           contents: prompt,
           config: {
             responseMimeType: 'application/json',

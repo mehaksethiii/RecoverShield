@@ -143,14 +143,30 @@ export class AgentService {
     if (policyResult.status === 'ALLOW') {
       try {
         let apiResponse = '';
+
         if (aiDecision.recommendedAction === 'GENERATE_PAYMENT_LINK') {
-           const link = await razorpayService.createPaymentLink(
-             risk.amount,
-             risk.currency,
-             'RazorShield Payment Recovery',
-             { name: customer.name, email: customer.email, contact: customer.phone || '' }
-           );
-           apiResponse = JSON.stringify({ linkId: link.id, url: link.short_url });
+          const link = await razorpayService.createPaymentLink(
+            risk.amount,
+            risk.currency,
+            'RazorShield Payment Recovery',
+            { name: customer.name, email: customer.email, contact: customer.phone || '' }
+          );
+          apiResponse = JSON.stringify({ linkId: link.id, url: link.short_url });
+        }
+
+        if (aiDecision.recommendedAction === 'RETRY_PAYMENT') {
+          const retryResult = await razorpayService.retryPayment(
+            payment.razorpayPaymentId || payment.id,
+            risk.amount,
+            risk.currency,
+            payment.method || null,
+            { name: customer.name, email: customer.email, contact: customer.phone || '' }
+          );
+          apiResponse = JSON.stringify({
+            orderId: retryResult.orderId,
+            linkId: retryResult.linkId,
+            url: retryResult.shortUrl,
+          });
         }
 
         await prisma.recoveryAction.create({
@@ -161,6 +177,18 @@ export class AgentService {
             apiResponse
           }
         });
+
+        // For RETRY and PAYMENT_LINK we optimistically mark revenue as recovered
+        // once the action is dispatched (Razorpay confirmation comes via webhook)
+        if (['RETRY_PAYMENT', 'GENERATE_PAYMENT_LINK'].includes(aiDecision.recommendedAction)) {
+          await prisma.revenueRisk.update({
+            where: { id: risk.id },
+            data: {
+              status: 'RECOVERED',
+              recoveredAmount: risk.amount,
+            }
+          });
+        }
         
         await prisma.auditLog.create({
           data: { eventType: 'ACTION_EXECUTED', riskId: risk.id, actor: 'SYSTEM', details: `Executed ${aiDecision.recommendedAction} successfully.` }

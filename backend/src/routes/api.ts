@@ -34,6 +34,128 @@ router.get('/dashboard', async (req, res) => {
   });
 });
 
+// ── Real chart data endpoints ──────────────────────────────────────────────
+
+// Recovery Trend: last 7 days — recovered amount vs risk amount per day
+router.get('/charts/recovery-trend', async (req, res) => {
+  try {
+    const days: { name: string; recovered: number; risk: number }[] = [];
+    const now = new Date();
+    for (let i = 6; i >= 0; i--) {
+      const start = new Date(now);
+      start.setDate(now.getDate() - i);
+      start.setHours(0, 0, 0, 0);
+      const end = new Date(start);
+      end.setHours(23, 59, 59, 999);
+
+      const dayName = start.toLocaleDateString('en-US', { weekday: 'short' });
+
+      const risksInDay = await prisma.revenueRisk.findMany({
+        where: { detectedAt: { gte: start, lte: end } }
+      });
+
+      const risk = risksInDay.reduce((s, r) => s + r.amount, 0);
+      const recovered = risksInDay
+        .filter(r => r.status === 'RECOVERED')
+        .reduce((s, r) => s + (r.recoveredAmount || 0), 0);
+
+      days.push({ name: dayName, recovered: Math.round(recovered / 100), risk: Math.round(risk / 100) });
+    }
+    res.json(days);
+  } catch (e: any) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// Recovery Strategy Distribution: count of each actionType from RecoveryAction
+router.get('/charts/strategy-distribution', async (req, res) => {
+  try {
+    const actions = await prisma.recoveryAction.groupBy({
+      by: ['actionType'],
+      _count: { actionType: true },
+      where: { status: 'SUCCESS' }
+    });
+
+    const labelMap: Record<string, string> = {
+      RETRY_PAYMENT: 'Smart Retry',
+      GENERATE_PAYMENT_LINK: 'Payment Link',
+      ESCALATE_HUMAN: 'Escalated',
+      DO_NOTHING: 'No Action'
+    };
+
+    const data = actions.map(a => ({
+      name: labelMap[a.actionType] || a.actionType,
+      value: a._count.actionType
+    }));
+
+    // If no data yet, return empty so chart shows "no data" state
+    res.json(data.length > 0 ? data : []);
+  } catch (e: any) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// Common Failure Reasons: aggregate failureReason from RevenueRisk
+router.get('/charts/failure-reasons', async (req, res) => {
+  try {
+    const risks = await prisma.revenueRisk.findMany({
+      where: { failureReason: { not: null } },
+      select: { failureReason: true }
+    });
+
+    const counts: Record<string, number> = {};
+    for (const r of risks) {
+      const raw = (r.failureReason || '').toLowerCase();
+      let bucket = 'Other';
+      if (raw.includes('timeout'))         bucket = 'UPI Timeout';
+      else if (raw.includes('funds') || raw.includes('balance')) bucket = 'No Funds';
+      else if (raw.includes('declined') || raw.includes('decline')) bucket = 'Declined';
+      else if (raw.includes('bank'))       bucket = 'Bank Error';
+      else if (raw.includes('upi'))        bucket = 'UPI Error';
+      counts[bucket] = (counts[bucket] || 0) + 1;
+    }
+
+    const data = Object.entries(counts)
+      .map(([name, count]) => ({ name, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 6);
+
+    res.json(data.length > 0 ? data : []);
+  } catch (e: any) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// Live risk score metrics — UPI/card/chargeback computed from DB
+router.get('/charts/risk-scores', async (req, res) => {
+  try {
+    const last100 = await prisma.revenueRisk.findMany({
+      orderBy: { detectedAt: 'desc' },
+      take: 100,
+      include: { payment: true }
+    });
+    const total = last100.length || 1;
+
+    const upiFailures = last100.filter(r =>
+      r.payment?.method === 'upi' || (r.failureReason || '').toLowerCase().includes('upi') || (r.failureReason || '').toLowerCase().includes('timeout')
+    ).length;
+
+    const cardDeclines = last100.filter(r =>
+      r.payment?.method === 'card' || (r.failureReason || '').toLowerCase().includes('decline')
+    ).length;
+
+    const escalated = last100.filter(r => r.status === 'ESCALATED').length;
+
+    res.json({
+      upiFailureRate: Math.min(99, Math.round((upiFailures / total) * 100)),
+      cardDeclineRisk: Math.min(99, Math.round((cardDeclines / total) * 100)),
+      chargebackRisk: Math.min(99, Math.round((escalated / total) * 100))
+    });
+  } catch (e: any) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 router.post('/simulations', async (req, res) => {
     try {
         const { count = 10 } = req.body;
@@ -84,7 +206,7 @@ router.post('/copilot', async (req, res) => {
             if (process.env.GEMINI_API_KEY && !process.env.GEMINI_API_KEY.includes('placeholder')) {
                 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
                 const response = await ai.models.generateContent({
-                    model: 'gemini-3.1-pro-preview',
+                    model: 'gemini-2.0-flash',
                     contents: `You are the RazorShield Merchant Copilot. Answer the merchant's question based on this data: ${context}\n\nQuestion: ${query}`
                 });
                 if (response.text) {

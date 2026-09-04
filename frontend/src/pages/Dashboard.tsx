@@ -51,7 +51,28 @@ function RiskGauge({ score, label, color }: { score: number; label: string; colo
 
 export default function Dashboard() {
 
-  const [data, setData] = useState<any>(null);
+  const [data, setData]                       = useState<any>(null);
+  const [chartData, setChartData]             = useState<any[]>([]);
+  const [strategyData, setStrategyData]       = useState<any[]>([]);
+  const [failureReasons, setFailureReasons]   = useState<any[]>([]);
+  const [riskScores, setRiskScores]           = useState<any>({ upiFailureRate: 0, cardDeclineRisk: 0, chargebackRisk: 0 });
+
+  const fetchCharts = async () => {
+    try {
+      const [trend, strategy, failures, scores] = await Promise.all([
+        axios.get('http://localhost:3001/api/charts/recovery-trend'),
+        axios.get('http://localhost:3001/api/charts/strategy-distribution'),
+        axios.get('http://localhost:3001/api/charts/failure-reasons'),
+        axios.get('http://localhost:3001/api/charts/risk-scores'),
+      ]);
+      setChartData(trend.data);
+      setStrategyData(strategy.data);
+      setFailureReasons(failures.data);
+      setRiskScores(scores.data);
+    } catch (err) {
+      console.error('Failed to fetch chart data', err);
+    }
+  };
 
   const fetchData = async () => {
     try {
@@ -64,11 +85,22 @@ export default function Dashboard() {
 
   useEffect(() => {
     fetchData();
-    const interval = setInterval(fetchData, 5000); // poll every 5s
+    fetchCharts();
+    const interval = setInterval(() => { fetchData(); fetchCharts(); }, 5000);
     return () => clearInterval(interval);
   }, []);
 
   const simulateFailure = async () => {
+    const methods = ['upi', 'card', 'netbanking', 'wallet'];
+    const errors  = [
+      'UPI transaction timeout',
+      'Payment declined by bank',
+      'Insufficient funds in account',
+      'Bank server error',
+      'UPI PIN incorrect',
+    ];
+    const method = methods[Math.floor(Math.random() * methods.length)];
+    const error  = errors[Math.floor(Math.random() * errors.length)];
     const payload = {
       event: 'payment.failed',
       payload: {
@@ -78,41 +110,23 @@ export default function Dashboard() {
             order_id: 'order_' + Math.random().toString(36).substring(7),
             amount: Math.floor(Math.random() * 50000) + 5000,
             currency: 'INR',
-            method: 'upi',
-            error_description: 'UPI transaction timeout'
+            method,
+            error_description: error
           }
         }
       }
     };
     await axios.post('http://localhost:3001/webhooks/razorpay', payload);
-    fetchData();
+    setTimeout(() => { fetchData(); fetchCharts(); }, 600);
   };
 
-  if (!data) return <div>Loading...</div>;
+  if (!data) return (
+    <div className="flex items-center justify-center h-64">
+      <div className="text-slate-400 text-sm animate-pulse font-mono">Connecting to RazorShield engine...</div>
+    </div>
+  );
 
-  const mockChartData = [
-    { name: 'Mon', recovered: 4000, risk: 2400 },
-    { name: 'Tue', recovered: 3000, risk: 1398 },
-    { name: 'Wed', recovered: 2000, risk: 9800 },
-    { name: 'Thu', recovered: 2780, risk: 3908 },
-    { name: 'Fri', recovered: 1890, risk: 4800 },
-    { name: 'Sat', recovered: 2390, risk: 3800 },
-    { name: 'Sun', recovered: 3490, risk: 4300 },
-  ];
-
-  const mockStrategyData = [
-    { name: 'Smart Retry', value: 45 },
-    { name: 'Payment Link', value: 30 },
-    { name: 'Alt Route', value: 25 },
-  ];
-  const PIE_COLORS = ['#0ea5e9', '#8b5cf6', '#10b981'];
-
-  const mockFailureReasons = [
-    { name: 'UPI Timeout', count: 120 },
-    { name: 'No Funds', count: 85 },
-    { name: 'Declined', count: 65 },
-    { name: 'Bank Error', count: 40 },
-  ];
+  const PIE_COLORS = ['#0ea5e9', '#8b5cf6', '#10b981', '#f59e0b'];
 
   return (
     <div>
@@ -184,16 +198,16 @@ export default function Dashboard() {
       <div className="grid grid-cols-3 gap-6">
         <div className="col-span-2 space-y-6">
           <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-            <h3 className="text-lg font-bold text-slate-900 mb-6">Recovery Trend</h3>
+            <h3 className="text-lg font-bold text-slate-900 mb-6">Recovery Trend <span className="text-xs font-normal text-slate-400 ml-1">— last 7 days (₹ hundreds)</span></h3>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={mockChartData}>
+                <LineChart data={chartData}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
                   <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#64748b'}} />
                   <YAxis axisLine={false} tickLine={false} tick={{fill: '#64748b'}} />
-                  <Tooltip />
-                  <Line type="monotone" dataKey="recovered" stroke="#16a34a" strokeWidth={3} dot={false} />
-                  <Line type="monotone" dataKey="risk" stroke="#ef4444" strokeWidth={3} dot={false} />
+                  <Tooltip formatter={(v: any) => `₹${v.toLocaleString()}`} />
+                  <Line type="monotone" dataKey="recovered" stroke="#16a34a" strokeWidth={3} dot={false} name="Recovered" />
+                  <Line type="monotone" dataKey="risk" stroke="#ef4444" strokeWidth={3} dot={false} name="At Risk" />
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -259,16 +273,19 @@ export default function Dashboard() {
         <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
           <h3 className="text-lg font-bold text-slate-900 mb-6">Recovery Strategy Distribution</h3>
           <div className="h-64 flex items-center justify-center">
+            {strategyData.length === 0 ? (
+              <p className="text-sm text-slate-400">Run a simulation to populate strategy data.</p>
+            ) : (
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
-                  data={mockStrategyData}
+                  data={strategyData}
                   innerRadius={60}
                   outerRadius={80}
                   paddingAngle={5}
                   dataKey="value"
                 >
-                  {mockStrategyData.map((_entry, index) => (
+                  {strategyData.map((_entry, index) => (
                     <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
                   ))}
                 </Pie>
@@ -276,14 +293,18 @@ export default function Dashboard() {
                 <Legend verticalAlign="bottom" height={36} iconType="circle" />
               </PieChart>
             </ResponsiveContainer>
+            )}
           </div>
         </div>
 
         <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
           <h3 className="text-lg font-bold text-slate-900 mb-6">Common Failure Reasons</h3>
           <div className="h-64">
+            {failureReasons.length === 0 ? (
+              <p className="text-sm text-slate-400 mt-4">Simulate payment failures to populate this chart.</p>
+            ) : (
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={mockFailureReasons} layout="vertical" margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+              <BarChart data={failureReasons} layout="vertical" margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#e2e8f0" />
                 <XAxis type="number" axisLine={false} tickLine={false} tick={{fill: '#64748b'}} />
                 <YAxis dataKey="name" type="category" axisLine={false} tickLine={false} tick={{fill: '#64748b'}} width={80} />
@@ -291,6 +312,7 @@ export default function Dashboard() {
                 <Bar dataKey="count" fill="#3b82f6" radius={[0, 4, 4, 0]} barSize={24} />
               </BarChart>
             </ResponsiveContainer>
+            )}
           </div>
         </div>
       </div>
@@ -312,13 +334,13 @@ export default function Dashboard() {
             <RiskGauge score={Math.min(99, Math.max(1, data.activeRisks * 3 + 18))} label="Overall Risk" color="#ef4444" />
           </div>
           <div className="flex flex-col items-center bg-slate-50 rounded-xl p-4 border border-slate-100">
-            <RiskGauge score={62} label="UPI Failure Rate" color="#f59e0b" />
+            <RiskGauge score={riskScores.upiFailureRate || 0} label="UPI Failure Rate" color="#f59e0b" />
           </div>
           <div className="flex flex-col items-center bg-slate-50 rounded-xl p-4 border border-slate-100">
-            <RiskGauge score={28} label="Card Decline Risk" color="#3b82f6" />
+            <RiskGauge score={riskScores.cardDeclineRisk || 0} label="Card Decline Risk" color="#3b82f6" />
           </div>
           <div className="flex flex-col items-center bg-slate-50 rounded-xl p-4 border border-slate-100">
-            <RiskGauge score={15} label="Chargeback Risk" color="#10b981" />
+            <RiskGauge score={riskScores.chargebackRisk || 0} label="Chargeback Risk" color="#10b981" />
           </div>
         </div>
       </div>
