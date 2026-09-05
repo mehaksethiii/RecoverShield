@@ -157,7 +157,6 @@ This deployment is a single-tenant proof-of-concept built for the hackathon. The
 - There are no merchant accounts or login flows. The app operates as a single shared demo environment.
 - All payment data is synthetic. The "Simulate Payment Failure" button generates fake payment IDs that do not correspond to real Razorpay transactions.
 - Razorpay API calls (payment link creation, order creation) run in test mode using a single set of demo credentials.
-- The Render free tier uses an ephemeral compute instance. The backend may take 30–60 seconds to wake up after inactivity.
 
 ---
 
