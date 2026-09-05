@@ -5,6 +5,16 @@
 
 ---
 
+## 🔗 Live Deployment
+
+**🌐 Frontend (Vercel):** https://recovershield-beta.vercel.app
+
+**⚙️ Backend (Render):** https://recovershield.onrender.com
+
+**🎥 Demo Video:** [Watch on Google Drive](https://drive.google.com/file/d/1eot0FVxy8J8z8qbKwcSh5BDX1XEiU0zr/view?usp=drivesdk)
+
+---
+
 ## 📌 Executive Summary
 Every digital merchant loses **15% to 30% of addressable revenue** through friction points: transient bank network timeouts, issuer declines, card auth expirations, and abandoned payment links. 
 
