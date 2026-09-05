@@ -1,147 +1,148 @@
-# RecoverShield (RazorShield) — Autonomous AI Revenue Recovery Engine 🛡️⚡
+# RecoverShield — Autonomous AI Revenue Recovery Engine
 
 > **Built for the Razorpay AI Buildathon — AI Revenue Recovery Track**  
-> *Transforming payment drop-offs & transaction failures into recovered revenue using autonomous, policy-bounded multi-model AI.*
+> *Transforming payment drop-offs and transaction failures into recovered revenue using autonomous, policy-bounded multi-model AI.*
 
 ---
 
-## 🔗 Live Deployment
+## Live Deployment
 
-**🌐 Live URL to Test:** https://recovershield-beta.vercel.app
+**Live URL to Test:** https://recovershield-beta.vercel.app
 
-**🖥️ Frontend (Vercel):** https://recovershield-beta.vercel.app
+**Frontend (Vercel):** https://recovershield-beta.vercel.app
 
-**⚙️ Backend (Render):** https://recovershield.onrender.com
+**Backend (Render):** https://recovershield.onrender.com
 
-**🎥 Demo Video:** [Watch on Google Drive](https://drive.google.com/file/d/1eot0FVxy8J8z8qbKwcSh5BDX1XEiU0zr/view?usp=drivesdk)
+**Demo Video:** [Watch on Google Drive](https://drive.google.com/file/d/1eot0FVxy8J8z8qbKwcSh5BDX1XEiU0zr/view?usp=drivesdk)
 
 ---
 
-## 📌 Executive Summary
-Every digital merchant loses **15% to 30% of addressable revenue** through friction points: transient bank network timeouts, issuer declines, card auth expirations, and abandoned payment links. 
+## Executive Summary
+
+Every digital merchant loses **15% to 30% of addressable revenue** through friction points: transient bank network timeouts, issuer declines, card auth expirations, and abandoned payment links.
 
 Traditional approaches either do nothing or execute blunt, blind retry scripts that annoy users, trigger card network penalties, and waste merchant time.
 
-**RecoverShield (RazorShield)** is an autonomous, explainable revenue recovery system built directly on Razorpay's rails. It intercepts failed payments in real-time, diagnoses the root cause using dual-model AI reasoning (Google Gemini + Groq LPU fallback), validates every action against strict merchant guardrails, and executes surgical recovery workflows (smart adaptive retries, custom WhatsApp/SMS payment links, or rail switching) — all with 100% auditability.
+**RecoverShield** is an autonomous, explainable revenue recovery system built directly on Razorpay's rails. It intercepts failed payments in real-time, diagnoses the root cause using dual-model AI reasoning (Google Gemini + Groq LPU fallback), validates every action against strict merchant guardrails, and executes surgical recovery workflows — smart adaptive retries, custom payment links, or rail switching — all with full auditability.
 
 ---
 
-## 🚀 Fully Implemented Features (What is Live & Ready)
+## Fully Implemented Features
 
-### 1. 🌐 3D Recovery Core & Real-Time Telemetry Pipeline
-- **Interactive Three.js 3D Core**: Centerpiece visualization mapping the end-to-end recovery journey:
-  $$\text{Failed Payments (Left)} \longrightarrow \text{AI Diagnosis Core (Center)} \longrightarrow \text{Strategy Routes} \longrightarrow \text{Recovered Revenue Zone (Right)}$$
-- **Live Packet Physics & Raycasting**: Active transaction packets travel dynamically across glowing conduits with interactive click/hover inspection showing Transaction ID, Risk Score, Diagnosis, and Action Status.
-- **HUD Live Metrics**: Real-time counters for Active Risks, Revenue at Risk, Recovered Today, and Recovery Rate Percentage.
-- **Data Visualizations**: Recharts-powered analytics for 7-day Recovery Trends, Recovery Strategy Distribution (Donut Chart), and Top Failure Reasons (Bar Chart).
+### 1. 3D Recovery Core and Real-Time Telemetry Pipeline
+- **Interactive Three.js 3D Core**: Centerpiece visualization mapping the end-to-end recovery journey from failed payments through AI diagnosis to recovered revenue.
+- **Live Packet Physics**: Active transaction packets travel dynamically across conduits with click/hover inspection showing Transaction ID, Risk Score, Diagnosis, and Action Status.
+- **HUD Live Metrics**: Real-time counters for Active Risks, Revenue at Risk, Recovered Today, and Recovery Rate.
+- **Data Visualizations**: Recharts-powered analytics for 7-day Recovery Trends, Recovery Strategy Distribution, and Top Failure Reasons — all live from the database.
 
-### 2. 🧠 Multi-Model AI Reasoning Architecture with Zero Downtime
-- **Google Gemini 3.1 Pro (Preview)**: Primary deep contextual reasoning engine executing structured JSON extraction for failure classification, customer sentiment risk, and recommended action.
-- **Groq LPU (GPT-OSS / LLaMA)**: High-speed zero-latency fallback engine (<400ms) seamlessly triggered if Gemini hits quota or rate limits.
-- **Deterministic Offline Rule Engine**: Guarantees 100% system availability even in complete network or API degradation scenarios.
+### 2. Multi-Model AI Reasoning Architecture
+- **Google Gemini 2.0 Flash**: Primary contextual reasoning engine for failure classification, customer risk scoring, and recommended action in structured JSON.
+- **Groq LPU**: High-speed fallback engine triggered automatically if Gemini hits quota or rate limits.
+- **Deterministic Rule Engine**: Guarantees 100% system availability even under complete API degradation.
 
-### 3. 🛡️ Deterministic Guardrails & Safety Policy Engine (`PolicyEngine`)
-- Autonomous actions are strictly bounded by programmable merchant safety rules:
-  - **High-Value Escalation Threshold**: Any transaction above ₹50,000 is automatically blocked from auto-retry and routed to human operator review.
-  - **Velocity Caps**: Maximum 2 automated retry attempts within 24 hours per card/UPI handle to prevent issuer blocking.
-  - **Action Blacklists**: Restricts specific high-risk execution methods for sensitive accounts.
+### 3. Deterministic Guardrails and Safety Policy Engine
+Autonomous actions are strictly bounded by programmable merchant safety rules:
+- **High-Value Escalation Threshold**: Transactions above a configured limit are blocked from auto-retry and routed to human review.
+- **Velocity Caps**: Maximum retry attempts per card or UPI handle within a 24-hour window.
+- **Action Blacklists**: Restrict specific high-risk execution methods for sensitive accounts.
 
-### 4. 💳 Razorpay Test Mode & Webhook Integration
-- Real-time webhook listener (`/webhooks/razorpay`) handling `payment.failed` and `order.paid` events.
-- Test Mode integration leveraging live Razorpay API keys with automated recovery link generation.
-- Instant simulator trigger to demo drop recovery live during evaluation.
+### 4. Razorpay Integration
+- Real-time webhook listener handling `payment.failed` and `payment.captured` events.
+- Live Razorpay Test Mode with automated payment link generation and smart retry via new order creation.
+- Instant simulator trigger for live demo during evaluation.
 
-### 5. 🔬 Synthetic Batch Simulator & Quantitative Impact Evaluator
-- **Stress-Test Simulation**: Generates 10 to 100+ realistic transaction drops with diverse error types (UPI timeout, insufficient funds, authentication failure).
-- **Mathematical Evaluation Engine**: Computes **Incremental Revenue Recovered (IRR)** over traditional naive retry baselines, quantifying the exact ROI generated for the merchant.
+### 5. Synthetic Batch Simulator and Evaluation Engine
+- Generates 10 to 100+ realistic transaction failures with diverse error types.
+- Computes Incremental Revenue Recovered over traditional naive retry baselines, quantifying exact ROI.
 
-### 6. 💬 Merchant AI Copilot
-- Conversational revenue analyst allowing merchants to ask natural-language questions like:
-  - *"What is our biggest source of revenue leakage this week?"*
-  - *"Which banks are showing peak UPI timeout rates?"*
-  - *"How much money did Policy Guardrails save from high-risk chargebacks?"*
-- Crisp, high-contrast, distraction-free merchant dashboard experience.
+### 6. Merchant AI Copilot
+- Conversational revenue analyst for natural-language questions such as:
+  - "What is our biggest source of revenue leakage this week?"
+  - "Which banks are showing peak UPI timeout rates?"
+  - "How much did policy guardrails save from high-risk chargebacks?"
 
-### 7. 📜 Immutable Audit Telemetry (`/audit`)
+### 7. Immutable Audit Telemetry
 - Every autonomous decision is logged with AI model confidence, reasoning trace, guardrail evaluation result, and execution receipt.
 
 ---
 
-## 🏗️ System Architecture
+## System Architecture
 
 ```
                  [ Razorpay Webhook Telemetry ]
-                               │
-                               ▼
-               ┌───────────────────────────────┐
-               │    Ingestion & Customer Mem   │
-               └───────────────┬───────────────┘
-                               │
-                               ▼
-               ┌───────────────────────────────┐
-               │     Dual AI Reasoning Core    │
-               │  Primary: Gemini 3.1 Pro      │
-               │  Fallback: Groq LPU Engine    │
-               └───────────────┬───────────────┘
-                               │ (Proposes Action & Risk)
-                               ▼
-               ┌───────────────────────────────┐
-               │  Deterministic Policy Gate    │
-               │  • Max Retry Caps             │
-               │  • High Value Guardrails      │
-               └───────────────┬───────────────┘
-                               │
-                ┌──────────────┴──────────────┐
-                ▼                             ▼
+                               |
+                               v
+               +-------------------------------+
+               |    Ingestion & Customer Mem   |
+               +---------------+---------------+
+                               |
+                               v
+               +-------------------------------+
+               |     Dual AI Reasoning Core    |
+               |  Primary: Gemini 2.0 Flash    |
+               |  Fallback: Groq LPU Engine    |
+               +---------------+---------------+
+                               | (Proposes Action & Risk)
+                               v
+               +-------------------------------+
+               |  Deterministic Policy Gate    |
+               |  - Max Retry Caps             |
+               |  - High Value Guardrails      |
+               +---------------+---------------+
+                               |
+                +──────────────+──────────────+
+                v                             v
          [ PASS GUARDRAIL ]           [ BLOCKED / ESCALATED ]
-                │                             │
-                ▼                             ▼
-       ┌─────────────────┐           ┌─────────────────┐
-       │ Razorpay Action │           │ Operator Review │
-       │ (Smart Retry /  │           │ (Merchant HUD)  │
-       │  Payment Link)  │           └─────────────────┘
-       └────────┬────────┘
-                │
-                ▼
-       ┌─────────────────┐
-       │ Immutable Audit │
-       │ & 3D Telemetry  │
-       └─────────────────┘
+                |                             |
+                v                             v
+       +-----------------+           +-----------------+
+       | Razorpay Action |           | Operator Review |
+       | (Smart Retry /  |           | (Merchant HUD)  |
+       |  Payment Link)  |           +-----------------+
+       +--------+--------+
+                |
+                v
+       +-----------------+
+       | Immutable Audit |
+       | & 3D Telemetry  |
+       +-----------------+
 ```
 
 ---
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 | Layer | Technologies |
 |---|---|
-| **Frontend UI** | React 19, TypeScript, Vite, Tailwind CSS v4, Lucide Icons, Recharts |
-| **3D Graphics & Canvas** | Three.js (WebGL), Custom Shaders & Bezier Raycasting |
-| **Backend API** | Node.js, Express, TypeScript, Prisma ORM |
-| **Database** | SQLite (Embedded zero-config storage for seamless local and container testing) |
-| **AI Intelligence** | Google Gemini (`@google/genai`), Groq OpenAI SDK (`openai/gpt-oss-120b`) |
-| **Fintech Gateway** | Razorpay Node.js SDK & Webhooks |
+| Frontend | React 18, TypeScript, Vite 5, Tailwind CSS, Lucide Icons, Recharts |
+| 3D Graphics | Three.js (WebGL) |
+| Backend | Node.js, Express, TypeScript, Prisma ORM |
+| Database | SQLite |
+| AI | Google Gemini 2.0 Flash, Groq LPU |
+| Payments | Razorpay Node.js SDK and Webhooks |
+| Deployment | Vercel (frontend), Render (backend) |
 
 ---
 
-## 🚀 Future Scope & Commercial Impact
+## Future Scope
 
-1. **Self-Healing Multi-PSP Smart Routing**: Dynamically switch merchant traffic to alternative gateways (e.g., Cashfree, Stripe, PayU) if Razorpay detects sustained banking outages on specific issuers.
-2. **Predictive Churn & Drop-Off Mitigation**: Pre-emptively detect user hesitation during checkout using mouse telemetry to offer tailored payment alternatives before failure occurs.
-3. **Automated WhatsApp Conversational Recovery**: Instantly deliver one-click UPI payment links directly to customer WhatsApp threads with natural-language assistance.
-4. **Merchant Risk Credit Scoring**: Provide lenders with verifiable recovery telemetry to unlock working-capital credit lines based on recovered cash flow.
-
----
-
-## 🏁 Hackathon Demo Pitch (Quick 5-Minute Guide)
-
-1. **The Hook (0:00 - 0:45)**: Show how failed payments cost merchants billions, and how blunt retries ruin customer trust.
-2. **The 3D Core in Action (0:45 - 2:00)**: Click `"Simulate Drop Webhook"` on the Dashboard. Walk through the 3D pipeline: from red failed nodes, into the glowing AI Core, branching to recovery routes, and ringing the emerald recovered zone.
-3. **Safety & Policy Guardrails (2:00 - 3:00)**: Show how high-risk actions are blocked by deterministic policy gates. Explain why this is safe for financial production environments.
-4. **Quantitative ROI & Copilot (3:00 - 4:15)**: Run the Batch Simulator to display incremental revenue recovery metrics and ask the Copilot for a real-time risk breakdown.
-5. **Conclusion & Vision (4:15 - 5:00)**: Highlight how RecoverShield transforms payment infrastructure from passive pipes into an active, self-healing revenue protector.
+1. **Multi-PSP Smart Routing**: Dynamically switch traffic to alternative gateways if sustained outages are detected on specific issuers.
+2. **Predictive Drop-Off Mitigation**: Detect user hesitation during checkout and offer alternatives before failure occurs.
+3. **WhatsApp Conversational Recovery**: Deliver one-click UPI payment links directly to customer WhatsApp threads.
+4. **Merchant Risk Credit Scoring**: Provide lenders with verifiable recovery telemetry to unlock working-capital credit lines.
 
 ---
 
-## 📄 License
-MIT License. Built with ❤️ for the Razorpay AI Buildathon.
+## Hackathon Demo Guide (5 Minutes)
+
+1. **(0:00 - 0:45)** Show how failed payments cost merchants billions and how blunt retries damage customer trust.
+2. **(0:45 - 2:00)** Click "Simulate Payment Failure" on the Dashboard. Walk through the 3D pipeline from failed nodes through the AI core to the recovery zone.
+3. **(2:00 - 3:00)** Show how high-risk actions are blocked by policy gates and routed to human review.
+4. **(3:00 - 4:15)** Run the Batch Simulator to show incremental revenue recovery metrics. Ask the Copilot for a real-time risk breakdown.
+5. **(4:15 - 5:00)** Highlight how RecoverShield transforms payment infrastructure from passive pipes into an active, self-healing revenue engine.
+
+---
+
+## License
+
+MIT License. Built for the Razorpay AI Buildathon.
