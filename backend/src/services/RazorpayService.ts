@@ -111,6 +111,7 @@ export class RazorpayService {
   }
 
 
+  async refundPayment(paymentId: string, amount?: number) {
     try {
       if (amount) {
         return await this.razorpay.payments.refund(paymentId, { amount });
