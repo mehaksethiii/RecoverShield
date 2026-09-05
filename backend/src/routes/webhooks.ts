@@ -29,9 +29,10 @@ router.post('/razorpay', async (req, res) => {
     const payload = typeof req.body === 'object' ? req.body : JSON.parse(rawBody);
     await agentService.handleRazorpayEvent(payload);
     res.status(200).send('ok');
-  } catch (error) {
-    console.error('Webhook processing error:', error);
-    res.status(500).send('Error');
+  } catch (error: any) {
+    console.error('Webhook processing error:', error?.message || error);
+    console.error('Stack:', error?.stack);
+    res.status(500).json({ error: error?.message || 'Unknown error' });
   }
 });
 
