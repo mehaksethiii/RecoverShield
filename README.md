@@ -17,6 +17,9 @@
 
 ---
 
+<img width="849" height="476" alt="image" src="https://github.com/user-attachments/assets/f19d256c-8796-42cb-962f-3f92f524f2ae" />
+Dashboard page.
+
 ## 📌 Executive Summary
 Every digital merchant loses **15% to 30% of addressable revenue** through friction points: transient bank network timeouts, issuer declines, card auth expirations, and abandoned payment links. 
 
