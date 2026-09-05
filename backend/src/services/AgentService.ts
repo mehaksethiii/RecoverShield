@@ -54,15 +54,16 @@ export class AgentService {
       customer = await prisma.customer.create({ data: { name: 'Demo Customer', email: 'test@example.com', merchantId: merchant.id, phone: '9876543210' } });
     }
     
-    let orderId = paymentData.order_id || `dummy_order_${Date.now()}`;
-    let order = await prisma.order.findFirst({ where: { id: orderId } });
+    const razorpayOrderId = paymentData.order_id || `dummy_order_${Date.now()}`;
+    let order = await prisma.order.findFirst({ where: { razorpayOrderId } });
     if (!order) {
         order = await prisma.order.create({
             data: {
-                id: orderId,
+                razorpayOrderId,
                 merchantId: merchant.id,
                 customerId: customer.id,
                 amount: paymentData.amount,
+                currency: paymentData.currency || 'INR',
                 status: 'CREATED'
             }
         });

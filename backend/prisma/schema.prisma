@@ -44,14 +44,15 @@ model Customer {
 }
 
 model Order {
-  id         String   @id @default(uuid())
-  merchantId String
-  customerId String
-  amount     Int
-  currency   String   @default("INR")
-  status     String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id              String   @id @default(uuid())
+  merchantId      String
+  customerId      String
+  razorpayOrderId String?  @unique
+  amount          Int
+  currency        String   @default("INR")
+  status          String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
   
   merchant   Merchant @relation(fields: [merchantId], references: [id])
   customer   Customer @relation(fields: [customerId], references: [id])
