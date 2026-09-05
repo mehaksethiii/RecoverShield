@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+
+const API = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 import { AlertCircle, ShieldCheck, IndianRupee, PlayCircle, Sparkles } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell, Legend } from 'recharts';
 import RecoverShield3DCore from '../components/RecoverShield3DCore';
@@ -60,10 +62,10 @@ export default function Dashboard() {
   const fetchCharts = async () => {
     try {
       const [trend, strategy, failures, scores] = await Promise.all([
-        axios.get('http://localhost:3001/api/charts/recovery-trend'),
-        axios.get('http://localhost:3001/api/charts/strategy-distribution'),
-        axios.get('http://localhost:3001/api/charts/failure-reasons'),
-        axios.get('http://localhost:3001/api/charts/risk-scores'),
+        axios.get(`${API}/api/charts/recovery-trend`),
+        axios.get(`${API}/api/charts/strategy-distribution`),
+        axios.get(`${API}/api/charts/failure-reasons`),
+        axios.get(`${API}/api/charts/risk-scores`),
       ]);
       setChartData(trend.data);
       setStrategyData(strategy.data);
@@ -76,7 +78,7 @@ export default function Dashboard() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://localhost:3001/api/dashboard');
+      const response = await axios.get(`${API}/api/dashboard`);
       setData(response.data);
     } catch (error) {
       console.error('Failed to fetch dashboard data', error);
@@ -116,7 +118,7 @@ export default function Dashboard() {
         }
       }
     };
-    await axios.post('http://localhost:3001/webhooks/razorpay', payload);
+    await axios.post(`${API}/webhooks/razorpay`, payload);
     setTimeout(() => { fetchData(); fetchCharts(); }, 600);
   };
 

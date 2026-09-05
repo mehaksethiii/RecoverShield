@@ -8,7 +8,7 @@ export default function Policies() {
 
   const fetchPolicies = async () => {
     try {
-      const response = await axios.get('http://localhost:3001/api/policies');
+      const response = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/policies`);
       setPolicies(response.data);
     } catch (e) {
       console.error(e);
@@ -21,7 +21,7 @@ export default function Policies() {
 
   const savePolicy = async (ruleType: string, conditionValue: string, action: string, isActive: boolean) => {
     try {
-      await axios.post('http://localhost:3001/api/policies', { ruleType, conditionValue, action, isActive });
+      await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/policies`, { ruleType, conditionValue, action, isActive });
       await fetchPolicies();
       setSavedMessage(`Guardrail ${ruleType} saved successfully!`);
       setTimeout(() => setSavedMessage(''), 3000);

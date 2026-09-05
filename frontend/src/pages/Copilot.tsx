@@ -18,7 +18,7 @@ export default function Copilot() {
     setLoading(true);
 
     try {
-      const response = await axios.post('http://localhost:3001/api/copilot', { query: userMsg });
+      const response = await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/copilot`, { query: userMsg });
       setChat(prev => [...prev, { sender: 'bot', text: response.data.response }]);
     } catch (e) {
       setChat(prev => [...prev, { sender: 'bot', text: 'Sorry, I encountered an error connecting to the brain.' }]);

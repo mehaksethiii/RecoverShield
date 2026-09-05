@@ -8,7 +8,7 @@ export default function AuditTrail() {
   useEffect(() => {
     const fetchLogs = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/api/audit');
+        const response = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/audit`);
         setLogs(response.data);
       } catch (e) {
         console.error(e);
