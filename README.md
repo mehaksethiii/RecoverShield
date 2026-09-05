@@ -173,8 +173,4 @@ To evolve RecoverShield from a demo into a production-grade system, the followin
 - **Observability**: Add structured logging, error tracking (Sentry), and uptime monitoring to meet financial-grade reliability standards.
 - **Compliance**: Add audit log export, data retention policies, and PCI-DSS aligned data handling for cardholder information.
 
----
 
-## License
-
-MIT License. Built for the Razorpay AI Buildathon.
