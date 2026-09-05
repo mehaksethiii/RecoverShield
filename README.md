@@ -7,7 +7,9 @@
 
 ## 🔗 Live Deployment
 
-**🌐 Frontend (Vercel):** https://recovershield-beta.vercel.app
+**🌐 Live URL to Test:** https://recovershield-beta.vercel.app
+
+**🖥️ Frontend (Vercel):** https://recovershield-beta.vercel.app
 
 **⚙️ Backend (Render):** https://recovershield.onrender.com
 
