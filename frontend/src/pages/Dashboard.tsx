@@ -89,7 +89,11 @@ export default function Dashboard() {
     fetchData();
     fetchCharts();
     const interval = setInterval(() => { fetchData(); fetchCharts(); }, 5000);
-    return () => clearInterval(interval);
+    // Keep Render backend alive — ping every 4 minutes
+    const keepAlive = setInterval(() => {
+      axios.get(`${API}/health`).catch(() => {});
+    }, 4 * 60 * 1000);
+    return () => { clearInterval(interval); clearInterval(keepAlive); };
   }, []);
 
   const simulateFailure = async () => {

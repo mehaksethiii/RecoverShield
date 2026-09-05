@@ -15,7 +15,7 @@
 
 **Demo Video:** [Watch on Google Drive](https://drive.google.com/file/d/1eot0FVxy8J8z8qbKwcSh5BDX1XEiU0zr/view?usp=drivesdk)
 
-> **Note:** The backend is hosted on Render's free tier and may take 30–60 seconds to wake up on the first request. Once active, click the **"Simulate Payment Failure"** button on the dashboard to trigger the full AI recovery pipeline. Each click generates a synthetic failed payment, runs it through AI diagnosis, policy evaluation, and recovery execution — and updates all charts and metrics in real time.
+> Click the **"Simulate Payment Failure"** button on the dashboard to trigger the full AI recovery pipeline. Each click generates a synthetic failed payment, runs it through AI diagnosis, policy evaluation, and recovery execution — and updates all charts and metrics in real time.
 
 ---
 
