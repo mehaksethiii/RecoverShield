@@ -5,6 +5,9 @@
 
 ---
 
+<img width="849" height="476" alt="Screenshot 2026-09-05 182345" src="https://github.com/user-attachments/assets/e37a85e4-582b-4c9a-8ff1-f74a438a48ad" />
+
+
 ## Live Deployment
 
 **Live URL to Test:** https://recovershield-beta.vercel.app
