@@ -30,35 +30,6 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
 });
 
-app.get('/test-db', async (req, res) => {
-  try {
-    const { PrismaClient } = await import('@prisma/client');
-    const prisma = new PrismaClient();
-    const merchant = await prisma.merchant.findFirst();
-    res.json({ db: 'connected', merchant });
-  } catch (e: any) {
-    res.status(500).json({ db: 'error', message: e.message });
-  }
-});
-
-app.post('/test-webhook', async (req, res) => {
-  try {
-    const { AgentService } = await import('./services/AgentService');
-    const agent = new AgentService();
-    await agent.processPaymentFailure({
-      id: 'pay_test_direct',
-      order_id: 'order_test_direct_' + Date.now(),
-      amount: 10000,
-      currency: 'INR',
-      method: 'upi',
-      error_description: 'Test direct'
-    });
-    res.json({ success: true });
-  } catch (e: any) {
-    res.status(500).json({ success: false, error: e.message, stack: e.stack });
-  }
-});
-
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
