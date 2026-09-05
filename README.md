@@ -143,6 +143,33 @@ Autonomous actions are strictly bounded by programmable merchant safety rules:
 
 ---
 
+## Demo Assumptions
+
+This deployment is a single-tenant proof-of-concept built for the hackathon. The following assumptions apply:
+
+- All visitors share the same database. There is no user authentication or session isolation.
+- All users see the same data. Simulated payment failures triggered by any visitor appear on the dashboard for everyone.
+- There are no merchant accounts or login flows. The app operates as a single shared demo environment.
+- All payment data is synthetic. The "Simulate Payment Failure" button generates fake payment IDs that do not correspond to real Razorpay transactions.
+- Razorpay API calls (payment link creation, order creation) run in test mode using a single set of demo credentials.
+- The Render free tier uses an ephemeral compute instance. The backend may take 30–60 seconds to wake up after inactivity.
+
+---
+
+## Enhancing for Production
+
+To evolve RecoverShield from a demo into a production-grade system, the following changes would be prioritised:
+
+- **Multi-tenancy and authentication**: Each merchant gets their own account, isolated database partition, and OAuth-based login. Razorpay credentials are stored per merchant.
+- **Real webhook ingestion**: Connect each merchant's live Razorpay account so actual payment failures trigger the recovery pipeline automatically without manual simulation.
+- **Persistent storage**: Replace the shared demo database with per-merchant isolated PostgreSQL instances or row-level security policies.
+- **Role-based access control**: Separate views for merchant owners, finance teams, and support operators with appropriate permission levels.
+- **Production AI keys**: Each deployment uses dedicated API quotas for Gemini and Groq to avoid rate-limit sharing across merchants.
+- **Observability**: Add structured logging, error tracking (Sentry), and uptime monitoring to meet financial-grade reliability standards.
+- **Compliance**: Add audit log export, data retention policies, and PCI-DSS aligned data handling for cardholder information.
+
+---
+
 ## License
 
 MIT License. Built for the Razorpay AI Buildathon.
