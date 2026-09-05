@@ -20,9 +20,9 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 app.use(cors());
-// Use raw body for webhook verification
-app.use('/webhooks', express.raw({ type: 'application/json' }), webhookRoutes);
 app.use(express.json());
+// Also parse raw body for webhook signature verification
+app.use('/webhooks', express.raw({ type: 'application/json' }), webhookRoutes);
 
 app.use('/api', apiRoutes);
 

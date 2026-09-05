@@ -26,7 +26,14 @@ router.post('/razorpay', async (req, res) => {
   }
 
   try {
-    const payload = typeof req.body === 'object' ? req.body : JSON.parse(rawBody);
+    let payload: any;
+    if (Buffer.isBuffer(req.body)) {
+      payload = JSON.parse(req.body.toString());
+    } else if (typeof req.body === 'string') {
+      payload = JSON.parse(req.body);
+    } else {
+      payload = req.body;
+    }
     await agentService.handleRazorpayEvent(payload);
     res.status(200).send('ok');
   } catch (error: any) {
